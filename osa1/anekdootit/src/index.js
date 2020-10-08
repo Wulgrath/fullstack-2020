@@ -1,18 +1,26 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+
 const App = (props) => {
-  const [selected, setSelected] = useState(0)
+  let [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(0)
 
   const handleSelected = () => {
-    setSelected(selected === [Math.floor(Math.random() * anecdotes.length)])
+    setSelected(selected = Math.floor(Math.random() * 6 ))
+    console.log(selected)
   }
-  console.log([Math.floor(Math.random() * anecdotes.length)])
+  const handleVotes = () => {
+    setVotes(votes + 1)
+  } 
+
 
   return (
     <div>
-      {props.anecdotes[selected]}
-      <button onClick={() => handleSelected()}> random </button>
+      <p>{props.anecdotes[selected]}</p>
+      <p>has _ votes</p>
+      <button onClick={() => handleSelected()}> next anecdote </button>
+      <button onClick={() => handleVotes()}>vote</button>
     </div>
   )
 }
@@ -26,7 +34,12 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
+const points = [0, 0, 0, 0, 0, 0]
+
+const copy = [...points]
+
+
 ReactDOM.render(
-  <App anecdotes={anecdotes} />,
+  <App anecdotes={anecdotes}/>,
   document.getElementById('root')
 )
