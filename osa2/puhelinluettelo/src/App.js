@@ -47,11 +47,39 @@ const Persons = (props) => {
   )
 }
 
+const Notification = ({ notification }) => {
+  if (notification === null) {
+    return null;
+  }
+  return (
+    <div>
+      <div className="notification">
+        {notification}
+      </div>
+    </div>
+  )
+}
+
+const ErrorNotification = ({ errorNotification }) => {
+  if (errorNotification === null) {
+    return null;
+  }
+  return (
+    <div>
+      <div className="errorNotification">
+        {errorNotification}
+      </div>
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter] = useState('')
+  const [ notification, setNotification] = useState(null)
+  const [ errorNotification, setError ] = useState(null)
 
   useEffect(() => {
     personService
@@ -70,9 +98,8 @@ const App = () => {
       number: newNumber,
       //id: persons.length + 1
     }
-   
+
     const item = persons.find(item => item.name === newName)
-    console.log(item)
     
     if (item) {
       const nameWarning = window.confirm(`${newName} already exists in the phonebook, replace the old number with a new one?`)
@@ -90,6 +117,10 @@ const App = () => {
         setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
+        setNotification(`Person '${newName}' was added to the phonebook`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
     }
   }
@@ -103,6 +134,20 @@ const App = () => {
     .then(response => {
       setPersons(persons.map(person => person.id !== id ? person : response.data))
     })
+    .catch(error => {
+      console.log(`the person '${person.name}' no longer exists in the phonebook`)
+      setError(`the person '${person.name}' no longer exists in the phonebook`)
+      setTimeout(() => {
+        setError(null)
+      }, 3000)
+    },
+      setPersons(persons.filter(n => n.id !== id))
+    )
+    console.log(`${person.name}'s number was changed to the phonebook`)
+    setNotification(`${person.name}'s number was changed to the phonebook`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
   }
 
   const deletePerson = (id, name) => {
@@ -110,6 +155,10 @@ const App = () => {
     if (deleteWarning) {
       personService
       .remove(id)
+      setNotification(`The person '${name}' was deleted from the phonebook`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
     } else {
       console.log('delete not confirmed')
     }
@@ -134,6 +183,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
+      <ErrorNotification errorNotification={errorNotification}/>
       <Filter newFilter={newFilter}
       handleFilter={handleFilter}
        />
