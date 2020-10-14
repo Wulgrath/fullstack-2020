@@ -1,0 +1,19 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "044-2055123",
+      "id": 1
+    },
+    {
+      "name": "Miika Muurari",
+      "number": "1298599834",
+      "id": 2
+    },
+    {
+      "name": "Maisa Kaareva",
+      "number": "25678246",
+      "id": 3
+    }
+  ]
+}
