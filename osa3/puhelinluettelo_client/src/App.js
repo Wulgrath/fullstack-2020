@@ -4,11 +4,11 @@ import personService from './services/persons'
 const Filter = (props) => {
   return (
     <div>
-        filter shown with: <input
+      filter shown with: <input
         value={props.newFilter}
         onChange={props.handleFilter}
-        />
-      </div>
+      />
+    </div>
   )
 }
 
@@ -16,15 +16,15 @@ const PersonForm = (props) => {
   return (
     <form onSubmit={props.addName}>
       <div>
-        name: <input 
-        value={props.newName}
-        onChange={props.handleNameChange}
+        name: <input
+          value={props.newName}
+          onChange={props.handleNameChange}
         />
       </div>
       <div>
-        number: <input 
-        value={props.newNumber}
-        onChange={props.handleNumberChange}
+        number: <input
+          value={props.newNumber}
+          onChange={props.handleNumberChange}
         />
       </div>
       <div>
@@ -35,14 +35,13 @@ const PersonForm = (props) => {
 }
 
 const Persons = (props) => {
-  
-  return(
+  return (
     <div>
       {props.dataToShow.map(persons =>
         <p key={persons.id}>
           {persons.name} {persons.number} <button onClick={() => props.deletePerson(persons.id, persons.name)}>delete</button>
         </p>
-        )}
+      )}
     </div>
   )
 }
@@ -74,12 +73,12 @@ const ErrorNotification = ({ errorNotification }) => {
 }
 
 const App = () => {
-  const [ persons, setPersons] = useState([]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setNewFilter] = useState('')
-  const [ notification, setNotification] = useState(null)
-  const [ errorNotification, setError ] = useState(null)
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [errorNotification, setError] = useState(null)
 
   useEffect(() => {
     personService
@@ -99,66 +98,66 @@ const App = () => {
       //id: persons.length + 1
     }
 
-    const item = persons.find(item => item.name === newName)
-    
-    if (item) {
+    const person = persons.find(person => person.name === newName)
+
+    if (person) {
       const nameWarning = window.confirm(`${newName} already exists in the phonebook, replace the old number with a new one?`)
-      if (nameWarning){
-        replaceNumber(item.id)
+      if (nameWarning) {
+        replaceNumber(person.id)
       } else {
         console.log('number not updated')
       }
-    } 
-    
+    }
+
     else {
       personService
-      .create(nameObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-        setNotification(`Person '${newName}' was added to the phonebook`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
-      })
+        .create(nameObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+          setNotification(`Person '${newName}' was added to the phonebook`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 3000)
+        })
     }
   }
 
   const replaceNumber = (id) => {
     const person = persons.find(n => n.id === id)
-    const changedPerson = {...person, number: newNumber}
+    const changedPerson = { ...person, number: newNumber }
 
     personService
-    .replace(id, changedPerson)
-    .then(response => {
-      setPersons(persons.map(person => person.id !== id ? person : response.data))
-    })
-    .catch(error => {
-      console.log(`the person '${person.name}' no longer exists in the phonebook`)
-      setError(`the person '${person.name}' no longer exists in the phonebook`)
-      setTimeout(() => {
-        setError(null)
-      }, 3000)
-    },
-      setPersons(persons.filter(n => n.id !== id))
-    )
+      .replace(id, changedPerson)
+      .then(response => {
+        setPersons(persons.map(person => person.id !== id ? person : response.data))
+      })
+      .catch(error => {
+        console.log(`the person '${person.name}' no longer exists in the phonebook`)
+        setError(`the person '${person.name}' no longer exists in the phonebook`)
+        setTimeout(() => {
+          setError(null)
+        }, 3000)
+      },
+        setPersons(persons.filter(n => n.id !== id))
+      )
     console.log(`${person.name}'s number was changed to the phonebook`)
     setNotification(`${person.name}'s number was changed to the phonebook`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
   }
 
   const deletePerson = (id, name) => {
     const deleteWarning = window.confirm(`Delete ${name}?`)
     if (deleteWarning) {
       personService
-      .remove(id)
+        .remove(id)
       setNotification(`The person '${name}' was deleted from the phonebook`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     } else {
       console.log('delete not confirmed')
     }
@@ -184,20 +183,20 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification notification={notification} />
-      <ErrorNotification errorNotification={errorNotification}/>
+      <ErrorNotification errorNotification={errorNotification} />
       <Filter newFilter={newFilter}
-      handleFilter={handleFilter}
-       />
+        handleFilter={handleFilter}
+      />
       <h2>add a new number</h2>
       <PersonForm addName={addName}
-      newName={newName}
-      newNumber={newNumber}
-      handleNameChange={handleNameChange}
-      handleNumberChange={handleNumberChange}     
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
       <Persons dataToShow={dataToShow}
-      deletePerson={deletePerson} />
+        deletePerson={deletePerson} />
     </div>
   )
 
