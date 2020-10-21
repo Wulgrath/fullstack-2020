@@ -89,7 +89,6 @@ const App = () => {
   }, [])
   console.log('render', persons.length, 'persons')
 
-
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
@@ -119,6 +118,13 @@ const App = () => {
           setNotification(`Person '${newName}' was added to the phonebook`)
           setTimeout(() => {
             setNotification(null)
+          }, 3000)
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          setError(error.response.data.error)
+          setTimeout(() => {
+            setError(null)
           }, 3000)
         })
     }
@@ -155,6 +161,8 @@ const App = () => {
       personService
         .remove(id)
       setNotification(`The person '${name}' was deleted from the phonebook`)
+      setPersons(persons.filter(n => n.id !== id))
+      console.log('person deleted')
       setTimeout(() => {
         setNotification(null)
       }, 3000)
