@@ -3,7 +3,7 @@ Content-Type: application/json; charset=utf-8
 
 {
     "title": "juuh",
-    "author": "Sdhtd",
-    "url": "Stfffgrg",
-    "likes": 12
+    "author": "Erkki",
+    "url": "asd",
+    "likes": 1222
 }
