@@ -1,0 +1,7 @@
+PUT http://localhost:3003/api/blogs/5f981db68979a105502bd6af
+
+{
+
+    "likes": 666
+
+}
