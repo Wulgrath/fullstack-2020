@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json; charset=utf-8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbm55eSIsImlkIjoiNWY5OTNhNzhjOWZjMTAyYzA0MGM4YzNlIiwiaWF0IjoxNjAzODk1Njg2fQ.pizF2L__MziN-Bu5Bh74WPhTabTtLEIgYMRIYwP3-ZQ
 
 {
-    "title": "blogi4",
-    "author": "Sibelisus",
-    "url": "https://sibelisus.blog",
-    "likes": 654,
+    "title": "blogi6",
+    "author": "Sibelisusia",
+    "url": "https://sibelisusi.blog",
+    "likes": 12999,
     "userId": "5f993a78c9fc102c040c8c3e"
 }
