@@ -1,7 +1,9 @@
-PUT http://localhost:3003/api/blogs/5f981db68979a105502bd6af
+PUT http://localhost:3003/api/blogs/5f9982716546b53f1881cadd
+Content-Type: application/json; charset=utf-8
 
 {
-
+    "title": "päivittetty blogi putilla",
+    "author": "dddd",
+    "url": "hthhth",
     "likes": 666
-
 }

@@ -37,7 +37,7 @@ blogsRouter.get('/', async (req, res) => {
       user.blogs = user.blogs.concat(savedBlog._id)
       await user.save()
 
-      res.status(201).json(savedBlog.toJSON)
+      res.status(201).json(savedBlog)
       
     } catch(exception) {
       res.status(400).json(exception)
@@ -68,14 +68,15 @@ blogsRouter.get('/', async (req, res) => {
   })
   
 
-/* EI TOIMI
   blogsRouter.put('/:id', async (req, res) => {
     const body = req.body
 
     const blog = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
       likes: body.likes
     }
-
     try {
       const newBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {new: true})
       res.json(newBlog)
@@ -83,6 +84,6 @@ blogsRouter.get('/', async (req, res) => {
       res.json(exception)
     }
   })
-*/
+
   module.exports = blogsRouter
   
