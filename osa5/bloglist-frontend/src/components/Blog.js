@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, addLike, deleteBlog }) => {
 
-  let [open, setOpen] = useState(true)
+  let [open, setOpen] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,19 +15,28 @@ const Blog = ({ blog, user }) => {
     setOpen(open = !open)
   }
 
-  return (
-    <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={handleClick}>view</button>
+  if (!open) {
+    return (
+      <div id="blogList" style={blogStyle}>
+        <div>
+          {blog.title} {blog.author} <button id="viewButton" onClick={handleClick}>view</button>
+        </div>
       </div>
-      <div style={{ display: open ? 'none' : '' }}>
-        <p>{blog.url}</p>
-        <p>{blog.likes}</p>
-        <p>{user.name}</p>
+    )
+  } else {
+    return (
+      <div style={blogStyle}>
+        <div>
+          {blog.title} {blog.author} <button onClick={handleClick}>view</button>
+        </div>
+        <div>
+          <p>{blog.url}</p>
+          <p>{blog.likes}<button id="likeButton" onClick={() => addLike(blog.id)}>like</button></p>
+          <button id="removeButton" onClick={() => deleteBlog(blog.id, blog.title, blog.author)}>remove blog</button>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default Blog

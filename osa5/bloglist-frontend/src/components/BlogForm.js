@@ -18,49 +18,30 @@ const BlogForm = ({ createBlog }) => {
     setAuthor('')
     setBlogUrl('')
   }
-    /*blogService.create(blogObject)
-      .then(response => {
-        setBlogs(blogs.concat(response.data))
-        setTitle('')
-        setAuthor('')
-        setBlogUrl('')
-        setNotification(`a new blog ${title} added`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
-      })
-      .catch(error => {
-        setNotification('invalid blog')
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
-      })
-  }
-*/
 
   return (
     <div>
       <h2>create a new blog</h2>
       <form onSubmit={addBlog}>
         <div>
-          title<input
+          title<input id="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
-          author<input
+          author<input id="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
-          url<input
+          url<input id="url"
             value={blogUrl}
             onChange={({ target }) => setBlogUrl(target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <button id="submitBlog" type="submit">create</button>
       </form>
     </div>
   )

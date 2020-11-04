@@ -86,11 +86,52 @@ const App = () => {
         }, 3000)
       })
   }
+
+  const addLike = (id) => {   
+    const blog = blogs.find(n => n.id === id)
+    const newObject = {
+      user: blog.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+
+    blogService
+      .update(id, newObject)
+      .then(response => {
+
+      })
+      .catch(error => {
+        console.log(error)
+        setNotification('something went wrong')
+        setTimeout(() => {
+        }, 3000)
+      },
+      setBlogs(blogs.filter(n => n.id !== id))
+      )
+  }
+
+  const deleteBlog = (id, title, author) => {
+    const deleteWarning = window.confirm(`Remove '${title}' by ${author}?`)
+    if (deleteWarning) {
+      blogService
+        .remove(id)
+      setNotification(`The blog '${title}' was removed`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
+      setBlogs(blogs.filter(n => n.id !== id))
+    }
+  }
+
   const logOut = () => {
     window.localStorage.clear()
   }
 
   const blogFormRef = useRef()
+
+  const sortedBlogs = blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => prevLikes - curLikes)
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -99,7 +140,8 @@ const App = () => {
     return (
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
+          <h2>Log in</h2>
+          <button id="login" onClick={() => setLoginVisible(true)}>log in</button>
         </div>
         <div style={showWhenVisible}>
           <LoginForm
@@ -132,11 +174,13 @@ const App = () => {
         />
       </Togglable>
       <div>
-        {blogs.map((blog, i) =>
-        <Blog key={i}
-        blog={blog}
-        user={user}
-        />
+        {sortedBlogs.map((blog, i) =>
+          <Blog key={i}
+            blog={blog}
+            addLike={addLike}
+            deleteBlog={deleteBlog}
+            user={user}
+          />
         )}
       </div>
     </div>
