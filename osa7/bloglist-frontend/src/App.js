@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { BrowserRouter as Router, Switch, Route, Link, useParams, useHistory } from 'react-router-dom'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import BlogList from './components/BlogList'
 import Blog from './components/Blog'
+import UserList from './components/UserList'
+import User from './components/User'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { initBlogs } from './reducers/blogReducer'
+import { initUsers } from './reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import { connect } from 'react-redux'
 
@@ -16,6 +21,10 @@ const App = (props) => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(initBlogs())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(initUsers())
   }, [dispatch])
 
   const [username, setUsername] = useState('')
@@ -57,8 +66,13 @@ const App = (props) => {
   const blogFormRef = useRef()
 
   const sortedBlogs = () => {
-    return props.blogs.sort(({ likes: prevLikes }, {likes: curLikes}) => curLikes - prevLikes)
+    return props.blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => curLikes - prevLikes)
   }
+
+  const padding = {
+    paddingRight: 5
+  }
+
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
@@ -85,6 +99,9 @@ const App = (props) => {
 
   return (
     <div>
+      <div>
+        <h1>Blog App</h1>
+      </div>
       <Notification />
       {user === null ? loginForm() :
         <div>
@@ -95,15 +112,34 @@ const App = (props) => {
         <BlogForm
         />
       </Togglable>
-      <h2>Blogs</h2>
-      <div>
-        {sortedBlogs().map(blog =>
-          <Blog key={blog.id}
-            blog={blog}
-            user={user}
-          />
-        )}
-      </div>
+      <Router>
+        <div>
+          <Link style={padding} to='/'>Blogs</Link>
+          <Link to='/users'>Users</Link>
+        </div>
+        <Switch>
+          <Route path='/users/:id'>
+            <User />
+          </Route>
+          <Route path='/blogs/:id'>
+            <Blog />
+          </Route>
+          <Route path='/users'>
+            <UserList />
+          </Route>
+          <Route path='/'>
+            <h2>Blogs</h2>
+            <div>
+              {sortedBlogs().map(blog =>
+                <BlogList key={blog.id}
+                  blog={blog}
+                  user={user}
+                />
+              )}
+            </div>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   )
 }
@@ -114,8 +150,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-const ConnectedAnecdotes = connect(
+const ConnectedBlogs = connect(
   mapStateToProps
 )(App)
 
-export default ConnectedAnecdotes
+export default ConnectedBlogs

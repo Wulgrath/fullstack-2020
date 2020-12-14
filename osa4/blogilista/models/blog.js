@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const config = require('../utils/config')
-
 
   const blogSchema = mongoose.Schema({
     title: {
@@ -16,6 +14,7 @@ const config = require('../utils/config')
       type: Number,
       default: 0
     },
+    comments: [],
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

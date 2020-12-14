@@ -1,0 +1,6 @@
+POST http://localhost:3003/api/blogs/5f99e30d6fe27121b084f13b/comments
+Content-Type: application/json; charset=utf-8
+
+{
+    "content": "toinen kommentti"
+}

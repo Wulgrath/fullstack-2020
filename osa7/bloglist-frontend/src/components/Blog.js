@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 import { addLike } from '../reducers/blogReducer'
-import { deleteBlog } from '../reducers/blogReducer'
+import { addComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { useField } from '../hooks'
 
-
-//const Blog = ({ blog, addLike, deleteBlog }) => {
 const Blog = (props) => {
+  const content = useField('text')
 
-  let [open, setOpen] = useState(false)
+  const id = useParams().id
+  const blog = props.blogs.find(n => n.id === id)
+
 
   const setLike = (blog) => {
     console.log('vote', blog.id)
@@ -19,54 +22,53 @@ const Blog = (props) => {
       props.setNotification('')
     }, 5000)
   }
+  
+  /*const setComment = (event) => {
+    event.preventDefault()
+    console.log(content.value, blog.id)
+    blogService.comment(id, {content: content.value})
+    props.setNotification('You added a comment')
+    setTimeout(() => {
+      props.setNotification('')
+    }, 5000)
+  }*/
 
-  const removeBlog = (blog) => {
-    console.log('remove', blog.id)
-    const deleteWarning = window.confirm(`Remove '${blog.title}' by ${blog.author}?`)
-    if (deleteWarning) {
-      props.deleteBlog(blog.id)
-      props.setNotification(`You removed blog '${blog.title}' by ${blog.author}`)
-      setTimeout(() => {
-        props.setNotification('')
-      }, 5000)
-    }
+  const setComment = async (event) => {
+    event.preventDefault()
+    props.addComment(blog.id, {content: content.value})
+    content.reset()
+    props.setNotification(`You added a new comment`)
+    setTimeout(() => {
+      props.setNotification('')
+    }, 5000)
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
+  const newContent = {...content}
+  delete newContent.reset
 
-  const handleClick = () => {
-    setOpen(open = !open)
-  }
-
-  if (!open) {
+  if (blog) {
     return (
-      <div id="blogList" style={blogStyle}>
-        <div>
-          {props.blog.title} {props.blog.author} <button id="viewButton" onClick={handleClick}>view</button>
-        </div>
+      <div>
+        <h2>{blog.title} by {blog.author}</h2>
+        <div>{blog.url}</div>
+        <div>{blog.likes} likes <button id="likeButton" onClick={() => setLike(blog)}>like</button></div>
+        <div>Blog added by {blog.user.name}</div>
+        <h3>Comments</h3>
+        <form onSubmit={setComment}>
+        <input {...newContent}/><button type='submit'>add comment</button>
+        </form>
+        {blog.comments.map(comment => 
+          <ul key={comment.content}>
+            <li>{comment.content}</li>
+          </ul>
+            )}
       </div>
     )
   } else {
-    return (
-      <div style={blogStyle}>
-        <div>
-          {props.blog.title} {props.blog.author} <button onClick={handleClick}>view</button>
-        </div>
-        <div>
-          <p>{props.blog.url}</p>
-          <p>{props.blog.likes}<button id="likeButton" onClick={() => setLike(props.blog)}>like</button></p>
-          <button id="removeButton" onClick={() => removeBlog(props.blog)}>remove blog</button>
-        </div>
-      </div>
-    )
+    return null
   }
 }
+
 
 const mapStateToProps = (state) => {
   return {
@@ -77,13 +79,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   addLike,
   setNotification,
-  deleteBlog
+  addComment
 }
 
 const ConnectedBlogs = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Blog)
-
 
 export default ConnectedBlogs

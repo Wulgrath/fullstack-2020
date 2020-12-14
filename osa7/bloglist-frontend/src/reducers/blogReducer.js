@@ -34,6 +34,17 @@ export const addLike = (blog) => {
   }
 }
 
+export const addComment = (id, content) => {
+  console.log(id, content)
+  return async dispatch => {
+    await blogService.comment(id, content)
+    dispatch({
+      type: 'COMMENT',
+      data: { id, content }
+    })
+  }
+}
+
 export const deleteBlog = (id) => {
   return async dispatch => {
     await blogService.remove(id)
@@ -45,8 +56,7 @@ export const deleteBlog = (id) => {
 }
 
 const blogReducer = (state = [], action) => {
-  console.log(state)
-  console.log(action)
+ console.log(action)
 
   switch (action.type) {
     case 'NEW':
@@ -64,6 +74,14 @@ const blogReducer = (state = [], action) => {
         )
     case 'DELETE':
       return state.filter(n => n.id !== action.data.id)
+    case 'COMMENT':
+      const blogToComment = state.find(n => n.id === action.data.id)
+      const commentedBlog = {
+        ...blogToComment, comments: blogToComment.comments.concat(action.data.content)
+      }
+      return state.map(blog =>
+        blog.id !== action.data.id ? blog : commentedBlog
+        )
       default: return state
   }
 }
