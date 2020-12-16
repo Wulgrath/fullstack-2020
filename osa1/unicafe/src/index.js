@@ -4,28 +4,32 @@ import ReactDOM from 'react-dom'
 const Statistics = (props) => {
   console.log(props)
   if (props.allClicks[0]) {
-  return (
+    return (
 
-  
-    <div>
-      <StatisticsLine text="good" value={props.good}></StatisticsLine>
-      <StatisticsLine text="neutral" value={props.neutral}></StatisticsLine>
-      <StatisticsLine text="bad" value={props.bad}></StatisticsLine>
-      <StatisticsLine text="all" value={props.allClicks.length}></StatisticsLine>
-      <StatisticsLine text="average" value={props.averageCounter/props.allClicks.length }></StatisticsLine>
-      <StatisticsLine text="positive" value={props.good/props.allClicks.length * 100 + ' %'}></StatisticsLine>
-    </div>
-  )
+
+      <div>
+        <table>
+          <tbody>
+            <StatisticsLine text="good" value={props.good}></StatisticsLine>
+            <StatisticsLine text="neutral" value={props.neutral}></StatisticsLine>
+            <StatisticsLine text="bad" value={props.bad}></StatisticsLine>
+            <StatisticsLine text="all" value={props.allClicks.length}></StatisticsLine>
+            <StatisticsLine text="average" value={props.averageCounter / props.allClicks.length}></StatisticsLine>
+            <StatisticsLine text="positive" value={props.good / props.allClicks.length * 100 + ' %'}></StatisticsLine>
+          </tbody>
+        </table>
+      </div>
+    )
   }
-    else {
-      return (
-        <div>
-          <p>No feedback given</p>
-        </div>
-      )
-    }
+  else {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
   }
-  
+}
+
 const Button = (props) => (
   <button onClick={props.handleClick}>
     {props.text}
@@ -33,9 +37,10 @@ const Button = (props) => (
 )
 
 const StatisticsLine = (props) => (
-  <div>
-    {props.text} {props.value}
-  </div>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
 )
 
 
@@ -48,17 +53,17 @@ const App = () => {
   const [averageCounter, setAverage] = useState(0)
 
   const handleGoodClick = () => {
-    setAll (allClicks.concat('G'))
+      setAll(allClicks.concat('G'))
     setGood(good + 1)
     setAverage(averageCounter + 1)
   }
   const handleNeutralClick = () => {
-    setAll (allClicks.concat('N'))
+      setAll(allClicks.concat('N'))
     setNeutral(neutral + 1)
     setAverage(averageCounter + 0)
   }
   const handleBadClick = () => {
-    setAll (allClicks.concat('B'))
+      setAll(allClicks.concat('B'))
     setBad(bad + 1)
     setAverage(averageCounter - 1)
   }
@@ -71,16 +76,16 @@ const App = () => {
       <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text="bad" />
       <h1>Statistics</h1>
-      <Statistics 
-      good={good}
-      neutral={neutral}
-      bad={bad}
-      allClicks={allClicks}
-      averageCounter={averageCounter} />
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        allClicks={allClicks}
+        averageCounter={averageCounter} />
     </div>
   )
 }
 
-ReactDOM.render(<App />, 
+ReactDOM.render(<App />,
   document.getElementById('root')
 )
