@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link, useParams, useHistory } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import './App.css'
+import Container from '@material-ui/core/Container'
 import BlogList from './components/BlogList'
 import Blog from './components/Blog'
 import UserList from './components/UserList'
@@ -11,6 +11,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import { login, loggedIn } from './reducers/loginReducer'
 import { initBlogs } from './reducers/blogReducer'
 import { initUsers } from './reducers/userReducer'
 import { useDispatch } from 'react-redux'
@@ -29,45 +30,22 @@ const App = (props) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      props.loggedIn(user)
       blogService.setToken(user.token)
     }
   }, [])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem(
-        'loggedAppUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-
-    }
-  }
 
   const logOut = () => {
     window.localStorage.clear()
   }
 
   const blogFormRef = useRef()
-
-  const sortedBlogs = () => {
-    return props.blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => curLikes - prevLikes)
-  }
 
   const padding = {
     paddingRight: 5
@@ -85,7 +63,6 @@ const App = (props) => {
         </div>
         <div style={showWhenVisible}>
           <LoginForm
-            handleLogin={handleLogin}
             username={username}
             setUsername={setUsername}
             password={password}
@@ -98,14 +75,14 @@ const App = (props) => {
   }
 
   return (
-    <div>
+    <Container>
       <div>
         <h1>Blog App</h1>
       </div>
       <Notification />
-      {user === null ? loginForm() :
+      {props.user === null ? loginForm() :
         <div>
-          <p>logged in as {user.name}</p><button onClick={() => logOut()}>logout</button>
+          <p>logged in as {props.user.name}</p><button onClick={() => logOut()}>logout</button>
         </div>
       }
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -114,8 +91,8 @@ const App = (props) => {
       </Togglable>
       <Router>
         <div>
-          <Link style={padding} to='/'>Blogs</Link>
-          <Link to='/users'>Users</Link>
+          <Link style={padding} to='/'><button className="btn btn-outline-info">Blogs</button></Link>
+          <Link to='/users'><button className="btn btn-outline-info">Users</button></Link>
         </div>
         <Switch>
           <Route path='/users/:id'>
@@ -129,29 +106,28 @@ const App = (props) => {
           </Route>
           <Route path='/'>
             <h2>Blogs</h2>
-            <div>
-              {sortedBlogs().map(blog =>
-                <BlogList key={blog.id}
-                  blog={blog}
-                  user={user}
-                />
-              )}
-            </div>
+            <BlogList />
           </Route>
         </Switch>
       </Router>
-    </div>
+    </Container>
   )
 }
 
 const mapStateToProps = (state) => {
   return {
-    blogs: state.blogs
+    blogs: state.blogs,
+    user: state.loggedUser
   }
 }
 
+const mapDispatchToProps = {
+  login, loggedIn
+}
+
 const ConnectedBlogs = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(App)
 
 export default ConnectedBlogs

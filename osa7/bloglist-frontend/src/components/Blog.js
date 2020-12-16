@@ -22,16 +22,6 @@ const Blog = (props) => {
       props.setNotification('')
     }, 5000)
   }
-  
-  /*const setComment = (event) => {
-    event.preventDefault()
-    console.log(content.value, blog.id)
-    blogService.comment(id, {content: content.value})
-    props.setNotification('You added a comment')
-    setTimeout(() => {
-      props.setNotification('')
-    }, 5000)
-  }*/
 
   const setComment = async (event) => {
     event.preventDefault()
@@ -68,7 +58,6 @@ const Blog = (props) => {
     return null
   }
 }
-
 
 const mapStateToProps = (state) => {
   return {

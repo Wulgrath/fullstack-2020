@@ -4,6 +4,7 @@ import { addLike } from '../reducers/blogReducer'
 import { deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { Table } from 'react-bootstrap'
 
 const BlogList = (props) => {
 
@@ -19,24 +20,32 @@ const BlogList = (props) => {
     }
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const sortedBlogs = () => {
+    return props.blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => curLikes - prevLikes)
   }
 
+
   return (
-    <div id="blogList" style={blogStyle}>
-      <div>
-        <Link to={`/blogs/${props.blog.id}`}>
-          {props.blog.title} {props.blog.author}
-        </Link>
-        <div>
-          <button id="removeButton" onClick={() => removeBlog(props.blog)}>remove blog</button>
-        </div>
-      </div>
+    <div>
+      <Table striped>
+        <tbody>
+          {sortedBlogs().map(blog =>
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title}
+                </Link>
+              </td>
+              <td>
+                {blog.author}
+              </td>
+              <td>
+              <button id="removeButton" onClick={() => removeBlog(blog)}>remove blog</button>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 

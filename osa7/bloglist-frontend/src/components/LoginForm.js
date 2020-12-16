@@ -1,48 +1,71 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import blogService from '../services/blogs'
+import { login } from '../reducers/loginReducer'
+import { connect } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 
-const LoginForm = ({
-  handleLogin,
-  username,
-  setUsername,
-  password,
-  setPassword
-}) => {
+const LoginForm = (props) => {
+
+  const handleLogin = (event) => {
+    event.preventDefault()
+    const user = ({
+      username: props.username,
+      password: props.password,
+    })
+    props.login(user)
+    blogService.setToken(user.token)
+    props.setUsername('')
+    props.setPassword('')
+  }
+
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-  <input
-            id="username"
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form-Label>username:</Form-Label>
+          <Form.Control
             type="text"
-            value={username}
+            value={props.username}
             name="Username"
-            onChange={({ target }) => setUsername(target.value)}
+            onChange={({ target }) => props.setUsername(target.value)}
           />
-        </div>
-        <div>
-          password
-  <input
-            id="password"
+        <Form-Label>password:</Form-Label>
+          <Form.Control
             type="password"
-            value={password}
+            value={props.password}
             name="Password"
-            onChange={({ target }) => setPassword(target.value)}
+            onChange={({ target }) => props.setPassword(target.value)}
           />
-        </div>
-        <button id="loginButton" type="submit">login</button>
-      </form>
+        <Button variant="primary" id="loginButton" type="submit">Login</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
 
 LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
   setUsername: PropTypes.func.isRequired,
   setPassword: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired
 }
-export default LoginForm
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.loggedUser
+  }
+}
+
+const mapDispatchToProps = {
+  login
+}
+
+const ConnectedBlogs = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginForm)
+
+
+export default ConnectedBlogs

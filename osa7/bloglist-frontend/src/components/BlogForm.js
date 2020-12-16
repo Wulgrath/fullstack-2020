@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 
 //const BlogForm = ({ createBlog, props }) => {
 const BlogForm = (props) => {
@@ -30,28 +31,27 @@ const BlogForm = (props) => {
 
   return (
     <div>
-      <h2>create a new blog</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title<input id="title"
+      <h2>Create a new blog</h2>
+      <Form onSubmit={addBlog}>
+        <Form.Group>
+          <Form-Label>Title: </Form-Label>
+          <Form.Control id="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author<input id="author"
+          <Form-Label>Author: </Form-Label>
+          <Form.Control id="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url<input id="url"
+          <Form-Label>Url: </Form-Label>
+          <Form.Control id="url"
             value={blogUrl}
             onChange={({ target }) => setBlogUrl(target.value)}
           />
-        </div>
-        <button id="submitBlog" type="submit">create</button>
-      </form>
+          <Button id="submitBlog" type="submit">create</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
@@ -66,9 +66,9 @@ const mapDispatchToProps = {
   createBlog, setNotification
 }
 
-const ConnectedAnecdotes = connect(
+const ConnectedBlogs = connect(
   mapStateToProps,
   mapDispatchToProps
 )(BlogForm)
 
-export default ConnectedAnecdotes
+export default ConnectedBlogs

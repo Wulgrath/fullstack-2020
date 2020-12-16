@@ -5,9 +5,7 @@ export const setNotification = (notification) => {
   }
 }
 
-const initialState = ''
-
-const notificationReducer = (state = initialState, action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'NOTIFY':
       const currentNotification = action.notification
