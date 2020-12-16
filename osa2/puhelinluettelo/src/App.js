@@ -1,51 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
-
-const Filter = (props) => {
-  return (
-    <div>
-        filter shown with: <input
-        value={props.newFilter}
-        onChange={props.handleFilter}
-        />
-      </div>
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <form onSubmit={props.addName}>
-      <div>
-        name: <input 
-        value={props.newName}
-        onChange={props.handleNameChange}
-        />
-      </div>
-      <div>
-        number: <input 
-        value={props.newNumber}
-        onChange={props.handleNumberChange}
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
-
-const Persons = (props) => {
-  
-  return(
-    <div>
-      {props.dataToShow.map(persons =>
-        <p key={persons.id}>
-          {persons.name} {persons.number} <button onClick={() => props.deletePerson(persons.id, persons.name)}>delete</button>
-        </p>
-        )}
-    </div>
-  )
-}
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const Notification = ({ notification }) => {
   if (notification === null) {
@@ -95,8 +52,7 @@ const App = () => {
     event.preventDefault()
     const nameObject = {
       name: newName,
-      number: newNumber,
-      //id: persons.length + 1
+      number: newNumber
     }
 
     const item = persons.find(item => item.name === newName)
@@ -135,14 +91,13 @@ const App = () => {
       setPersons(persons.map(person => person.id !== id ? person : response.data))
     })
     .catch(error => {
-      console.log(`the person '${person.name}' no longer exists in the phonebook`)
+      console.log(`${error} the person '${person.name}' no longer exists in the phonebook`)
       setError(`the person '${person.name}' no longer exists in the phonebook`)
       setTimeout(() => {
         setError(null)
       }, 3000)
-    },
       setPersons(persons.filter(n => n.id !== id))
-    )
+    })
     console.log(`${person.name}'s number was changed to the phonebook`)
     setNotification(`${person.name}'s number was changed to the phonebook`)
         setTimeout(() => {
@@ -155,6 +110,7 @@ const App = () => {
     if (deleteWarning) {
       personService
       .remove(id)
+      setPersons(persons.filter(n => n.id !== id))
       setNotification(`The person '${name}' was deleted from the phonebook`)
         setTimeout(() => {
           setNotification(null)

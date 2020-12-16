@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import countries from './services/countries'
 import countryService from './services/countries'
 
 
@@ -15,7 +14,7 @@ const Filter = (props) => {
 }
 
 const Countries = (props) => {
-  console.log(props.countries)
+  console.log(props.countries.name)
   
   return(
     /*<div>
