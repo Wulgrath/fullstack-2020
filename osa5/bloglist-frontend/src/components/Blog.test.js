@@ -42,20 +42,23 @@ test('renders all information when toggled to show', () => {
   expect(component.container).toHaveTextContent('200')
 })
 
-test.only('clicking button twice calls event handler twice', async () => {
+test('clicking button twice calls event handler twice', async () => {
 
   const mockHandler = jest.fn()
 
   const component = render(
     <Blog blog={blog}
-      SetOpen={mockHandler} />
+      addLike={mockHandler} />
   )
-  component.debug()
 
-  const button = component.getByText('view')
-  fireEvent.click(button)
+  const viewButton = component.getByText('view')
+  fireEvent.click(viewButton)
 
-  expect(mockHandler.mock.calls).toHaveLength(1)
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })
 
 test('BlogForm test', async () => {

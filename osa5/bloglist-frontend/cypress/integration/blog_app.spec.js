@@ -58,12 +58,48 @@ describe('Blog app', function () {
       it('a blog can be liked', function () {
         cy.get('#viewButton').click()
         cy.get('#likeButton').click()
+
+        cy.get('#viewButton').click()
+        cy.get('#showLikes').contains(1)
       })
-      it.only('a blog can be removed', function () {
+      it('a blog can be removed', function () {
         cy.get('#viewButton').click()
         cy.get('#removeButton').click()
 
         cy.get('html').should('not.contain', 'test title test author')
+      })
+    })
+    describe('and multiple blogs exists', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'test title',
+          author: 'test author',
+          url: 'test url',
+          likes: 10
+        })
+        cy.createBlog({
+          title: 'test title2',
+          author: 'test author2',
+          url: 'test url2',
+          likes: 200
+        })
+        cy.createBlog({
+          title: 'test title3',
+          author: 'test author3',
+          url: 'test url3',
+          likes: 100
+        })
+      })
+      it('the blogs are arranged, one with the most first', function () {
+        cy.get('#viewButton').click()
+        cy.get('#viewButton').click()
+        cy.get('#viewButton').click()
+
+        cy.get('.openBlogs').then (blogs => {
+          expect(blogs[0]).to.contain.text(200)
+          expect(blogs[1]).to.contain.text(100)
+          expect(blogs[2]).to.contain.text(10)
+        })
       })
     })
   })

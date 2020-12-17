@@ -25,13 +25,13 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
     )
   } else {
     return (
-      <div style={blogStyle}>
+      <div className="openBlogs" style={blogStyle}>
         <div>
           {blog.title} {blog.author} <button onClick={handleClick}>view</button>
         </div>
         <div>
           <p>{blog.url}</p>
-          <p>{blog.likes}<button id="likeButton" onClick={() => addLike(blog.id)}>like</button></p>
+          <p id="showLikes">{blog.likes}<button id="likeButton" onClick={() => addLike(blog.id)}>like</button></p>
           <button id="removeButton" onClick={() => deleteBlog(blog.id, blog.title, blog.author)}>remove blog</button>
         </div>
       </div>

@@ -100,7 +100,7 @@ const App = () => {
     blogService
       .update(id, newObject)
       .then(response => {
-
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : response))
       })
       .catch(error => {
         console.log(error)
@@ -131,7 +131,7 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const sortedBlogs = blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => prevLikes - curLikes)
+  const sortedBlogs = blogs.sort(({ likes: prevLikes }, { likes: curLikes }) => curLikes - prevLikes)
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -173,7 +173,7 @@ const App = () => {
           createBlog={addBlog}
         />
       </Togglable>
-      <div>
+      <div id="allBlogs">
         {sortedBlogs.map((blog, i) =>
           <Blog key={i}
             blog={blog}
