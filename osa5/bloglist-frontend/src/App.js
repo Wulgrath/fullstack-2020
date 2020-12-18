@@ -26,7 +26,7 @@ const App = () => {
   const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState('')
   const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
@@ -163,7 +163,7 @@ const App = () => {
   return (
     <div>
       <Notification notification={notification} />
-      {user === null ? loginForm() :
+      {user === '' ? loginForm() :
         <div>
           <p>logged in as {user.name}</p><button onClick={() => logOut()}>logout</button>
         </div>

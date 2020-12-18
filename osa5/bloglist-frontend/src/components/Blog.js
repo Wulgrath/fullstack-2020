@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, addLike, deleteBlog }) => {
+const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
   let [open, setOpen] = useState(false)
 
@@ -32,8 +32,11 @@ const Blog = ({ blog, addLike, deleteBlog }) => {
         <div>
           <p>{blog.url}</p>
           <p id="showLikes">{blog.likes}<button id="likeButton" onClick={() => addLike(blog.id)}>like</button></p>
+          { blog.user.username === user.username ?
           <button id="removeButton" onClick={() => deleteBlog(blog.id, blog.title, blog.author)}>remove blog</button>
-        </div>
+          : null
+          }
+          </div>
       </div>
     )
   }
