@@ -1,22 +1,34 @@
+let timer = 0
 
-const notificationAtStart = ''
-
-
-export const setNotification = (notification) => {
-  return {
-    type: 'NOTIFY',
-    notification
+export const setNotification = (notification, timeOut) => {
+  return async dispatch => {
+    dispatch({
+      type: 'NOTIFY',
+      data: notification
+    })
+    if (timer) {
+      clearTimeout(timer)
+      timer = 0
+      console.log('cleared', timer)
+    }
+    timer = setTimeout(() => {
+      dispatch({
+        type: 'DELNOTIFY',
+        data: ''
+      })
+    }, timeOut * 1000)
+    }
   }
-}
 
 
-const initialState = notificationAtStart
 
-const notificationReducer = (state = initialState, action) => {
+
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'NOTIFY':
-      const currentNotification = action.notification
-      return currentNotification
+      return action.data
+    case 'DELNOTIFY':
+      return action.data
     default: return state
   }
 }

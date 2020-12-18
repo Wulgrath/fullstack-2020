@@ -37,6 +37,7 @@ describe('unicafe reducer', () => {
     })
   })
   test('neutral is incremented', () => {
+
     const action = {
       type: 'OK'
     }
@@ -46,13 +47,14 @@ describe('unicafe reducer', () => {
     const newState = counterReducer(state, action)
     expect(newState).toEqual({
       good: 1,
-      ok: 0,
+      ok: 1,
       bad: 0,
-      all: 1,
+      all: 2,
       average: 1
     })
   })
   test('bad is incremented', () => {
+
     const action = {
       type: 'BAD'
     }
@@ -62,10 +64,10 @@ describe('unicafe reducer', () => {
     const newState = counterReducer(state, action)
     expect(newState).toEqual({
       good: 1,
-      ok: 0,
-      bad: 0,
-      all: 1,
-      average: 1
+      ok: 1,
+      bad: 1,
+      all: 3,
+      average: 0
     })
   })
   test('when reset set all to 0', () => {

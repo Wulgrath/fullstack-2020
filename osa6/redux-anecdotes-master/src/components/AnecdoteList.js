@@ -1,5 +1,4 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { setVote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
@@ -7,26 +6,24 @@ import { connect } from 'react-redux'
 
 
 const AnecdoteForm = (props) => {
-  //const dispatch = useDispatch()
-  //const anecdotes = useSelector(state => state.anecdotes)
 
   const vote = (id, content, votes) => {
-    console.log('vote', id)
-    console.log('notification', content)
     props.setVote(id, content, votes)
-    props.setNotification(`You voted  '${content}'`)
-    setTimeout(() => {
-      props.setNotification('')
-    }, 5000)
+    props.setNotification(`You voted '${content}'`, 5)
   }
 
   const sortedAnecdotes = () => {
     return props.anecdotes.sort(({ votes: prevVotes }, {votes: curVotes}) => curVotes - prevVotes)
   } 
 
+  const filteredAnecdotes = () => {
+    return sortedAnecdotes().filter(anecdote => anecdote.content.toLowerCase().includes(props.filter.toLowerCase()))
+  } 
+
+
   return (
     <div>
-      {sortedAnecdotes().map(anecdote =>
+      {filteredAnecdotes().map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -43,13 +40,13 @@ const AnecdoteForm = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    anecdotes: state.anecdotes
+    anecdotes: state.anecdotes,
+    filter: state.filter
   }
 }
 
 const mapDispatchToProps = {
-  setVote,
-  setNotification
+  setVote, setNotification
 }
 
 const ConnectedAnecdotes = connect(
