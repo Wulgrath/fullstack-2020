@@ -89,6 +89,10 @@ const App = () => {
     .replace(id, changedPerson)
     .then(response => {
       setPersons(persons.map(person => person.id !== id ? person : response.data))
+      setNotification(`${person.name}'s number was changed to the phonebook`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     })
     .catch(error => {
       console.log(`${error} the person '${person.name}' no longer exists in the phonebook`)
@@ -98,11 +102,6 @@ const App = () => {
       }, 3000)
       setPersons(persons.filter(n => n.id !== id))
     })
-    console.log(`${person.name}'s number was changed to the phonebook`)
-    setNotification(`${person.name}'s number was changed to the phonebook`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 3000)
   }
 
   const deletePerson = (id, name) => {
