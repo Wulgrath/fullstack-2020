@@ -1,19 +1,8 @@
   
 import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import Select from 'react-select'
-
-  const EDIT_BIRTH = gql`
-    mutation editBirth($name: String!, $born: Int!) {
-      editAuthor(
-        name: $name,
-        born: $born
-      ) {
-        name
-        born
-      }
-    }
-  `
+import { EDIT_BIRTH } from '../queries'
 
 const Authors = (props) => {
 
@@ -27,9 +16,7 @@ const Authors = (props) => {
 
   const addBirth = async (event) => {
     event.preventDefault()
-
     editBirth({ variables: { name: name.value, born: Number(born) }})
-
     setName('')
     setBorn('')
   }

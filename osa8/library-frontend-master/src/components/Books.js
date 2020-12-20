@@ -1,20 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const Books = (props) => {
+
+
+  const [bookGenre, setBookGenre] = useState('')
+  
   if (!props.show) {
     return null
   }
 
   const books = props.books.allBooks
 
+  const uniqueBooks = () => {
+    return [...new Map(books.map(book => [book, book.genres])).values()]
+  }
+
+  let unique = [...new Set(uniqueBooks())]
+  console.log(uniqueBooks())
+  console.log(unique)
+
+  const arr = uniqueBooks('nosql')
+
+  console.log(arr)
   return (
     <div>
       <h2>books</h2>
-
+      in genre: <b>{bookGenre}</b>
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>title</th>
             <th>
               author
             </th>
@@ -22,15 +37,18 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
+          {books.map(book =>
+            <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
             </tr>
           )}
         </tbody>
       </table>
+      {books.map(book => 
+        <button key={book.title} onClick={() => setBookGenre(book.genres)}>{book.genres}</button>
+      )}
     </div>
   )
 }

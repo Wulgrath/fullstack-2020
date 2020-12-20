@@ -1,35 +1,26 @@
-
-import React, { useState } from 'react'
-import { gql, useQuery } from '@apollo/client'
+import React, { useEffect, useState } from 'react'
+import { useQuery, useApolloClient } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-
-const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
-      name
-      born
-      bookCount
-    }
-  }
-`
-
-const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      author {
-        name
-        born
-      }
-      published
-    }
-  }
-`
+import LoginForm from './components/LoginForm'
+import Recommended from './components/Recommended'
+import { ALL_BOOKS } from './queries'
+import { ALL_AUTHORS } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [token, setToken] = useState(null)
+  const [error, setError] = useState('')
+  const client = useApolloClient()
+
+  useEffect(() => {
+    const loggedUser = localStorage.getItem('library-user-token')
+    if (loggedUser) {
+      const token = loggedUser
+      setToken(token)
+    }
+  })
 
   const authors = useQuery(ALL_AUTHORS, {
     pollInterval: 4000
@@ -37,10 +28,6 @@ const App = () => {
   const books = useQuery(ALL_BOOKS, {
     pollInterval: 4000
   })
-  
-  console.log(authors.data)
-  console.log(books.data)
-
 
   if (authors.loading) {
     return <div>
@@ -48,13 +35,29 @@ const App = () => {
     </div>
   }
 
+  const logOut = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
 
   return (
     <div>
+      {token === null ? <LoginForm
+        setError={setError}
+        setToken={setToken}
+      /> : <button onClick={logOut}>Log out</button>}
+
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
+        {token !== null ?
+          <div>
+            <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommended')}>recommended</button>
+          </div>
+          : null
+        }
       </div>
 
       <Authors
@@ -65,9 +68,12 @@ const App = () => {
         show={page === 'books'}
         books={books.data}
       />
-
       <NewBook
         show={page === 'add'}
+      />
+      <Recommended
+        show={page === 'recommended'}
+        books={books.data}
       />
 
     </div>
