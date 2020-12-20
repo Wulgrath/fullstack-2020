@@ -8,6 +8,7 @@ const loginRouter = require('./controllers/login')
 const morgan = require('morgan')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+const { tokenExtractor } = require('./utils/tokenExtractor')
 
 
 const mongoUrl = config.MONGODB_URI
@@ -25,6 +26,8 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(cors())
 app.use(express.json())
+
+app.use(tokenExtractor)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
