@@ -4,7 +4,6 @@ import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 import { Form, Button } from 'react-bootstrap'
 
-//const BlogForm = ({ createBlog, props }) => {
 const BlogForm = (props) => {
 
   const [title, setTitle] = useState('')

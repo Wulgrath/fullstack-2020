@@ -4,7 +4,7 @@ import { addLike } from '../reducers/blogReducer'
 import { deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { Table } from 'react-bootstrap'
+import { Table, Button } from 'react-bootstrap'
 
 const BlogList = (props) => {
 
@@ -40,7 +40,7 @@ const BlogList = (props) => {
                 {blog.author}
               </td>
               <td>
-              <button id="removeButton" onClick={() => removeBlog(blog)}>remove blog</button>
+              <Button size='sm' variant='secondary' id="removeButton" onClick={() => removeBlog(blog)}>remove blog</Button>
               </td>
             </tr>
           )}
@@ -48,7 +48,6 @@ const BlogList = (props) => {
       </Table>
     </div>
   )
-
 }
 
 const mapStateToProps = (state) => {

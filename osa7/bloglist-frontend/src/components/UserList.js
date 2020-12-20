@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const UserList = () => {
 
-const users = useSelector(state => state.users)
+  const users = useSelector(state => state.users)
 
   return (
     <div>
@@ -14,13 +14,13 @@ const users = useSelector(state => state.users)
           <tr>
             <th>
               User
-          </th>
+            </th>
             <th>
               Blogs created
-          </th>
+            </th>
           </tr>
           {users.map(user =>
-            <tr key={user.id}>
+            <tr key={user}>
               {user.map(singleUser =>
                 <tr key={singleUser.id}>
                   <td><Link to={`/users/${singleUser.id}`}>{singleUser.username}</Link></td>
