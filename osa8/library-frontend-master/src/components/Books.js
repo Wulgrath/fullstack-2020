@@ -9,19 +9,16 @@ const Books = (props) => {
     return null
   }
 
-  const books = props.books.allBooks
+  const filteredBooks = () => {
 
-  const uniqueBooks = () => {
-    return [...new Map(books.map(book => [book, book.genres])).values()]
+    if (bookGenre) {
+      return props.books.allBooks.filter(book => book.genres.includes(bookGenre ))
+    } else {
+      return props.books.allBooks
+    }
   }
-
-  let unique = [...new Set(uniqueBooks())]
-  console.log(uniqueBooks())
-  console.log(unique)
-
-  const arr = uniqueBooks('nosql')
-
-  console.log(arr)
+  
+  
   return (
     <div>
       <h2>books</h2>
@@ -37,8 +34,8 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(book =>
-            <tr key={book.title}>
+          {filteredBooks().map(book =>
+            <tr key={book.id}>
               <td>{book.title}</td>
               <td>{book.author.name}</td>
               <td>{book.published}</td>
@@ -46,9 +43,7 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
-      {books.map(book => 
-        <button key={book.title} onClick={() => setBookGenre(book.genres)}>{book.genres}</button>
-      )}
+      <button onClick={() => setBookGenre('patterns')}>patterns</button><button onClick={() => setBookGenre('drama')}>drama</button><button onClick={() => setBookGenre('crime')}>crime</button><button onClick={() => setBookGenre('nosql')}>nosql</button><button onClick={() => setBookGenre('database')}>database</button><button onClick={() => setBookGenre('')}>all genres</button>
     </div>
   )
 }
